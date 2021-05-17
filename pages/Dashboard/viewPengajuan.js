@@ -1,17 +1,17 @@
-import React from 'react'
-import { ScrollView, View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Title, Caption } from 'react-native-paper';
+import React from 'react';
+import { Caption } from 'react-native-paper';
+import { Platform, ScrollView, StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
 
 // components
-import Header from './component/header'
+import Header from '.././component/header'
 
-const viewhistory = ({ navigation }) => {
+const viewPengajuan = ({ navigation }) => {
 
     let [fontsLoad] = useFonts({
-        'DM-Sans-Bold': require('.././assets/fonts/DMSans-Bold.ttf'),
-        'DM-Sans-Regular': require('.././assets/fonts/DMSans-Regular.ttf'),
+        'DM-Sans-Bold': require('../.././assets/fonts/DMSans-Bold.ttf'),
+        'DM-Sans-Regular': require('../.././assets/fonts/DMSans-Regular.ttf'),
     })
 
     if(!fontsLoad){
@@ -20,8 +20,8 @@ const viewhistory = ({ navigation }) => {
         )
     } else {
         return (
-            <ScrollView style={styles.viewHistory} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-                <Header back="true" nav={navigation} name="Penitipan" />
+            <ScrollView style={styles.viewPengajuan} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+                <Header back="true" nav={navigation} name="Pengajuan" />
                 
                 <View style={styles.headerHistory}>
                     <Image style={styles.imgCoverHistory} source={{ uri: 'https://picsum.photos/200/300' }} />
@@ -37,24 +37,15 @@ const viewhistory = ({ navigation }) => {
                     </Text>
                 </View>
 
-                <View style={styles.history}>
-                    <Text style={styles.titleHistoryPenitipan}> History Penitipan </Text>
-
-                    <View style={styles.listHistory}>
-                        <View style={styles.budleHistory}>
-                            <View style={styles.borderLefthostiry} />
-                        </View>
-                        <View>
-                            <Text style={styles.durationHistoryP}> 12 May 2021 </Text>
-                            <Text style={styles.messagehistory}> Melakukan pengecekan kondisi awal rumah </Text>
-                        </View>
-                    </View>
-
-                    <View style={styles.listHistory}>
-                        <View style={styles.budleHistory} />
-                        <View>
-                            <Text style={styles.messagehistory}> Selesai </Text>
-                        </View>
+                <View style={styles.cardAcc}>
+                    <Text style={styles.textAcc}> Apakah kamu ingin menerima permintaan ini ?  </Text>
+                    <View style={styles.button}>
+                        <TouchableOpacity style={styles.buttonTolak}>
+                            <Text style={styles.textButton}> Tolak </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonTerima}>
+                            <Text style={styles.textButton}> Terima </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
@@ -62,12 +53,13 @@ const viewhistory = ({ navigation }) => {
     }
 }
 
-export default viewhistory;
+export default viewPengajuan;
 
 const styles = StyleSheet.create({
-    viewHistory: {
-        backgroundColor: '#fff',
+    viewPengajuan: {
+        backgroundColor: '#ffffff',
         paddingHorizontal: 10,
+        position: 'relative',
     },
     imgCoverHistory: {
         resizeMode: 'cover',
@@ -112,48 +104,44 @@ const styles = StyleSheet.create({
     deskripsiContent: {
         marginLeft: 5, 
     },
-    titleHistoryPenitipan: {
-        fontSize: 24,
-        fontWeight: '700',
-        fontFamily: 'DM-Sans-Bold',
-        marginBottom: 10, 
+    cardAcc: {
+        backgroundColor: '#FFFFFF',
+        marginVertical: 10, 
+        padding: 10,
+        borderRadius: 10,
+        borderWidth: 1.5,
+        borderColor: '#F0F0F0',
+        marginBottom: 40,
     },
-    history:{
-        marginBottom: 50, 
+    textAcc: {
+        fontSize: 16,
+        fontFamily: 'DM-Sans-Regular',
+        marginBottom: 5,
     },
-    listHistory: {
+    button:{
         display: 'flex',
         flexDirection: 'row',
-        marginVertical: 10, 
-    },
-    budleHistory: {
-        width: 15, 
-        height: 15, 
-        borderRadius: 50, 
-        backgroundColor: '#259A62',
-        marginRight: 10, 
-        marginLeft: 5,
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    borderLefthostiry: {
-        width: 4, 
-        height: 90,
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#259A62',
-        marginLeft: 5,
-        borderRadius: 5, 
     },
-    durationHistoryP: {
-        marginBottom: 5, 
-        fontSize: 14, 
+    buttonTerima: {
+        padding: 10, 
+        margin: 10,
+        backgroundColor: '#259A62',
+        borderRadius: 7, 
+        width: '35%'
+    },
+    buttonTolak: {
+        padding: 10, 
+        margin: 10,
+        backgroundColor: '#A53939',
+        borderRadius: 7, 
+        width: '35%'
+    },
+    textButton: {
+        textAlign: 'center',
         fontFamily: 'DM-Sans-Regular',
         fontWeight: '600',
-    },
-    messagehistory: {
-        fontSize: 16, 
-        fontFamily: 'DM-Sans-Regular',
-        fontWeight: '700',
+        color: '#ffffff',
+        fontSize: 15,
     }
 })

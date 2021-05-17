@@ -18,7 +18,10 @@ export default function login({ navigation }) {
                     <TextInput style={stylesLogin.textInput} placeholder="Email" value="" />
                     <TextInput style={stylesLogin.textInput} placeholder="Password" value="" />
                     <TouchableOpacity style={stylesLogin.ButtonStart} onPress={() => navigation.replace('Home')}>
-                        <Text style={stylesLogin.ButtonStartText}>Masuk</Text>
+                        <Text style={stylesLogin.ButtonStartText}>Masuk Home User</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={stylesLogin.ButtonStart} onPress={() => navigation.replace('DashboardAdmin')}>
+                        <Text style={stylesLogin.ButtonStartText}>Masuk Dashboard Admin</Text>
                     </TouchableOpacity>
                 </View>
             </View>

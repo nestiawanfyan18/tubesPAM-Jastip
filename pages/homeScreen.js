@@ -21,7 +21,7 @@ const homeScreen = ({ navigation }) => {
     } else {
         return (
             <ScrollView style={styles.home} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}> 
-                <Header />
+                <Header nav={navigation} />
                 <View style={styles.HelloUser}>
                     <Text style={styles.textHi}>Hi, Nestiawan</Text>
                     <Text style={styles.textDoing}>Apa yang ingin kamu lakukan hari ini ?</Text>
@@ -47,7 +47,7 @@ const homeScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </ScrollView>
                     <View style={styles.History}>
-                    <Text style={styles.textTitip}>Riwayat Barang yang kamu titipkan</Text>
+                        <Text style={styles.textTitip}>Riwayat Barang yang kamu titipkan</Text>
                         <View style={styles.history}>
                             <TouchableOpacity style={styles.cardHistory} onPress={() => { navigation.navigate('ViewHistory') }}>
                                 <Image style={styles.imgHistory} source={{ uri: 'https://picsum.photos/200/300' }} />
@@ -170,7 +170,8 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     imgHistory: {
-        width: 180,
+        // width: 180,
+        resizeMode: 'cover',
         height: 120, 
         borderRadius: 10, 
     },

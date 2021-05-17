@@ -20,7 +20,8 @@ const Profile = ({ navigation }) => {
     } else {
         return (
             <ScrollView style={styles.profile} >
-                <Header back="true" nav={navigation} profile="true" />
+                <Header back="true" name="Profile" nav={navigation} profile="true" />
+                
                 <ImageBackground 
                     style={styles.imgBackground} 
                     blurRadius={4} 
@@ -29,7 +30,10 @@ const Profile = ({ navigation }) => {
                     <View style={styles.backgroundTransparent}>
                         <Image style={styles.imagesProfile} source={ require('../assets/profile_user/man.jpg') } />
                         <Text style={styles.textProfile}> Nestiawan Ferdiyanto </Text> 
-                        <Text style={styles.textProfileDom}> Bandar Lampung - Lampung </Text> 
+                        <Text style={styles.textProfileDom}> Bandar Lampung - Lampung </Text>
+                        <TouchableOpacity style={styles.editProfile}>
+                            <Text style={styles.textEditProfile}> Perbarui </Text> 
+                        </TouchableOpacity>
                     </View>
                 </ImageBackground>
 
@@ -44,6 +48,9 @@ const Profile = ({ navigation }) => {
                         <Text style={styles.textInfoCard}> Riwayat Penitipan </Text> 
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity style={styles.buttonLogout} onPress={() => { navigation.replace('Login') }}>
+                    <Text style={styles.textLogout}> Keluar </Text>
+                </TouchableOpacity>
             </ScrollView>
         )
     }
@@ -79,7 +86,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column', 
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 15, 
+        borderRadius: 20, 
     },
     textProfile: {
         fontSize: 18, 
@@ -122,5 +129,28 @@ const styles = StyleSheet.create({
         fontSize: 13, 
         fontFamily: 'DM-Sans-Regular',
         marginTop: 7, 
+    },
+    textEditProfile:{ 
+        fontSize: 17,
+        fontFamily: 'DM-Sans-Bold',
+        color: '#34A7FF',
+        fontWeight: '700',
+    },
+    editProfile: {
+        marginVertical: 5, 
+    },
+    buttonLogout: {
+        marginVertical: 20,
+        padding: 13, 
+        borderWidth: 1.3,
+        borderColor: '#AF4F4F',
+        backgroundColor: '#CC4949',
+        borderRadius: 7, 
+    },
+    textLogout: {
+        fontSize: 17,
+        fontFamily: 'DM-Sans-Bold',
+        color: '#FFFFFF',
+        textAlign: 'center',
     }
 });

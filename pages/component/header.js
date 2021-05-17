@@ -12,19 +12,33 @@ const header = (props) => {
             return <TouchableOpacity style={styles.centerIcon} onPress={() => { dataProps.nav.goBack() }}><Image style={styles.iconLeft} source={require('../../assets/icons/left-arrow.png')} /></TouchableOpacity>;
         return null;
     }
+
+    const avatar = (dataProps) => {
+        if( props.profile != 'true' )
+            return(
+                <TouchableOpacity onPress={ () => {dataProps.nav.navigate('Profile')} }>
+                    <Avatar.Image size={45} source={{ uri: 'https://picsum.photos/200/300' }} />
+                </TouchableOpacity>
+            )
+        return(
+            <TouchableOpacity style={styles.centerIcons} >
+                <Avatar.Image style={styles.iconSetting} size={25} source={ require('../../assets/icons/settings.png') } />
+            </TouchableOpacity>
+        )
+    }
     
     return (
         <View style={styles.headersTitle}>
             <View style={styles.titleApp}>
                 { back(props) }
                 <View>
-                    <Text style={styles.titles}> Jastip </Text>
+                    <Text style={styles.titles}> { props.name != null ? props.name : 'Jastip'} </Text>
                     <View style={styles.borderBottomTitle}></View>
                 </View>
             </View>
-            <TouchableOpacity>
-                <Avatar.Image size={45} source={{ uri: 'https://picsum.photos/200/300' }} />
-            </TouchableOpacity>
+
+                {avatar(props)}
+
             <StatusBar animated={true} style={styles.StatusBars} translucent={true} currentHeight="10" backgroundColor="#fff" barStyle="dark-content"/>
         </View>
     )
@@ -44,7 +58,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     titles: {
-        fontSize: 33, 
+        fontSize: 28, 
         color: '#259A62',
         fontWeight: 'bold',
     },
@@ -65,7 +79,18 @@ const styles = StyleSheet.create({
         marginBottom: 15, 
     },
     iconLeft: {
-        width: 25, height:25,
+        width: 20, height:20,
         marginHorizontal: 10, 
+    },
+    iconSetting: {
+        backgroundColor: 'transparent',
+    },
+    centerIcons: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10,
+        marginRight: 5, 
     }
 })
