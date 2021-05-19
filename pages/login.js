@@ -1,8 +1,80 @@
-import React, { useState } from 'react'
-import { ScrollView, View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import {  } from 'react-native-paper';
+import React, { useState, useEffect } from 'react'
+import { ScrollView, View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function login({ navigation }) {
+const login = ({ navigation }) => {
+
+    const [email, setEmail]         =   useState('p.nestiawan@gmail.com');
+    const [password, setPassword]   =   useState('perdi321');
+    const [loginData, setLogin]     =   useState(false);
+    const [errorValidation, setValidation]     =   useState();
+
+    useEffect(() => {
+        const _validationLogin = async() => {
+            const truthLogin = await AsyncStorage.getItem('sessionLogin');
+            const roleAccess = await AsyncStorage.getItem('sessionRole');
+
+            if(truthLogin && roleAccess == 'user'){
+                return navigation.replace('Home') 
+            } else if(truthLogin && roleAccess == 'admin'){
+                return navigation.replace('DashboardAdmin')
+            }
+        }
+
+        _validationLogin();
+    }, [])
+
+    const login = async() => {
+        if(!email.trim() && !password.trim()){
+            setValidation(true);
+            setLogin(false);
+        } else {
+            setValidation(false);
+            setLogin(true);
+            
+            try{
+                await fetch("https://tubes-pam-api.herokuapp.com/login", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type' : 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'email': email,
+                        'password': password,
+                    })
+                }).then(
+                    res => res.json()
+                ).then(resData => {
+                    AsyncStorage.setItem('sessionLogin',    "true");
+                    AsyncStorage.setItem('sessionID',       resData.data.user.id.toString());
+                    AsyncStorage.setItem('sessionNama',     resData.data.user.name);
+                    AsyncStorage.setItem('sessionEmail',    resData.data.user.email);
+                    AsyncStorage.setItem('sessionRole',     resData.data.user.role);
+                    AsyncStorage.setItem('sessionNoTelfon', resData.data.user.noTelfon.toString());
+                    AsyncStorage.setItem('sessionToken',    resData.data.token);
+
+                    Alert.alert(
+                        'Berhasil',
+                        resData.message,
+                    );
+
+                    if(resData.data.user.role == 'user'){
+                        navigation.replace('Home');
+                    } else if(resData.data.user.role == 'admin'){
+                        navigation.replace('DashboardAdmin');
+                    }
+                })
+            }catch(error){
+                Alert.alert(
+                    'Gagal',
+                    "Username dan Password Tidak Terdaftar",
+                );
+                setLogin(false);
+            }
+        }
+    }
+
     return (
         <ScrollView style={stylesLogin.login}> 
             <View style={stylesLogin.headersTitle}>
@@ -14,15 +86,23 @@ export default function login({ navigation }) {
                     <Text style={stylesLogin.textDaftar}>Masuk</Text>
                     <Text style={stylesLogin.textDaftarPraf}>Masuk untuk memulai penitipan barang</Text>
                 </View>
+                <Text> { errorValidation == true ? "Silakan Isi Formnya" : ""} </Text>
                 <View style={stylesLogin.contentForm}>
-                    <TextInput style={stylesLogin.textInput} placeholder="Email" value="" />
-                    <TextInput style={stylesLogin.textInput} placeholder="Password" value="" />
-                    <TouchableOpacity style={stylesLogin.ButtonStart} onPress={() => navigation.replace('Home')}>
-                        <Text style={stylesLogin.ButtonStartText}>Masuk Home User</Text>
+                    <TextInput style={stylesLogin.textInput} placeholder="Email"
+                        onChangeText={ (email) => { setEmail(email), email == null ? setValidation(true) : setValidation(false) } }
+                        value={ email } />
+                    <TextInput style={stylesLogin.textInput} secureTextEntry={true} placeholder="Password"
+                        onChangeText={ (password) => { setPassword(password), password == null ? setValidation(true) : setValidation(false) } }
+                        value={ password } />
+                    {/* <TouchableOpacity style={stylesLogin.ButtonStart} onPress={() => navigation.replace('Home')}> */}
+                    <TouchableOpacity style={stylesLogin.ButtonStart} disabled={loginData} onPress={ () => { login() } }>
+                        <Text style={stylesLogin.ButtonStartText}>
+                            { loginData == false ? "Masuk" : "Tunggu Sebentar" }
+                        </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={stylesLogin.ButtonStart} onPress={() => navigation.replace('DashboardAdmin')}>
+                    {/* <TouchableOpacity style={stylesLogin.ButtonStart} onPress={() => navigation.replace('DashboardAdmin')}>
                         <Text style={stylesLogin.ButtonStartText}>Masuk Dashboard Admin</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
             <View style={stylesLogin.footerLogin}>
@@ -36,10 +116,13 @@ export default function login({ navigation }) {
     )
 }
 
+export default login;
+
 const stylesLogin = StyleSheet.create({
     login: {
         flex:1, 
         flexDirection: 'column',
+        backgroundColor: '#ffffff',
     },
     headersTitle: {
         flex: 7,

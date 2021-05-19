@@ -1,9 +1,51 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { ScrollView, View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function login({ navigation }) {
+const register = ({ navigation }) => {
+
+    const [name, setName]               = useState('Nestiawan Ferdiyanto');
+    const [noPhone, setNoPhone]         = useState('083412337586');
+    const [email, setEmail]             = useState('p.nestiawan@gmail.com');
+    const [password, setPassword]       = useState('perdi321');
+
+    useEffect(() => {
+        const _validationLogin = async() => {
+            const truthLogin = await AsyncStorage.getItem('sessionLogin');
+            const roleAccess = await AsyncStorage.getItem('sessionRole');
+
+            if(truthLogin && roleAccess == 'user'){
+                return navigation.replace('Home') 
+            } else if(truthLogin && roleAccess == 'admin'){
+                return navigation.replace('DashboardAdmin')
+            }
+        }
+
+        _validationLogin();
+    }, [])
+
+    const register = async() => {
+        await fetch("https://tubes-pam-api.herokuapp.com/register", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                'name': name,
+                'noTelp': noPhone,
+                'email': email,
+                'password': password,
+            })
+        }).then(res => res.json())
+        .then(resData => {
+            alert(resData.message + " Silakan Login...");
+            navigation.replace('Login');
+        })
+    }
+
     return (
-        <ScrollView style={stylesLogin.login}> 
+        <ScrollView style={stylesLogin.register}> 
             <View style={stylesLogin.headersTitle}>
                 <Text style={stylesLogin.titles}> Jastip </Text>
                 <View style={stylesLogin.borderBottomTitle}></View>
@@ -14,17 +56,26 @@ export default function login({ navigation }) {
                     <Text style={stylesLogin.textDaftarPraf}>Daftarkan diri anda untuk malakukan penitipan barang</Text>
                 </View>
                 <View style={stylesLogin.contentForm}>
-                    <TextInput style={stylesLogin.textInput} placeholder="NoPhone" value="" />
-                    <TextInput style={stylesLogin.textInput} placeholder="Email" value="" />
-                    <TextInput style={stylesLogin.textInput} placeholder="Password" value="" />
-                    <TouchableOpacity style={stylesLogin.ButtonStart}>
-                        <Text style={stylesLogin.ButtonStartText}>Masuk</Text>
+                    <TextInput style={stylesLogin.textInput} placeholder="Name" 
+                        onChangeText={(name) => setName(name) }  
+                        value={ name } />
+                    <TextInput style={stylesLogin.textInput} placeholder="NoPhone" 
+                        onChangeText={(noPhone) => setNoPhone(noPhone) }  
+                        value={ noPhone } />
+                    <TextInput style={stylesLogin.textInput} placeholder="Email" 
+                        onChangeText={(email) => setEmail(email) }  
+                        value={ email } />
+                    <TextInput style={stylesLogin.textInput} secureTextEntry={true} placeholder="Password" 
+                        onChangeText={(password) => setPassword(password) }  
+                        value={ password } />
+                    <TouchableOpacity style={stylesLogin.ButtonStart} onPress={ () => { register() } }>
+                        <Text style={stylesLogin.ButtonStartText}>Daftar</Text>
                     </TouchableOpacity>
                 </View>
             </View>
             <View style={stylesLogin.footerLogin}>
                 <Text>Sudah punya akun ? 
-                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <TouchableOpacity onPress={() => navigation.replace('Login')}>
                         <Text style={stylesLogin.textMasukButtom}>Daftar</Text>
                     </TouchableOpacity>
                 </Text>
@@ -33,10 +84,13 @@ export default function login({ navigation }) {
     )
 }
 
+export default register;
+
 const stylesLogin = StyleSheet.create({
-    login: {
+    register: {
         flex:1, 
         flexDirection: 'column',
+        backgroundColor: '#ffffff',
     },
     headersTitle: {
         flex: 7,

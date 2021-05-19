@@ -1,17 +1,33 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Platform, ImageBackground,  ScrollView, StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // components
 import Header from './component/header'
 
 const Profile = ({ navigation }) => {
 
+    const [nameSession, sessionNama] =  useState('');
+
+    useEffect(() => {
+        AsyncStorage.getItem('sessionNama').then((name) => {
+            if(name){
+                sessionNama(name);
+            }
+        });
+    }, []);
+
     let [fontsLoad] = useFonts({
         'DM-Sans-Bold': require('.././assets/fonts/DMSans-Bold.ttf'),
         'DM-Sans-Regular': require('.././assets/fonts/DMSans-Regular.ttf'),
     })
+
+    const _logout = async() => {
+        await AsyncStorage.clear();
+        navigation.replace('Login');
+    }
     
     if(!fontsLoad){
         return (
@@ -29,7 +45,7 @@ const Profile = ({ navigation }) => {
                     source={ require('../assets/background/pexels747964.jpg') }>
                     <View style={styles.backgroundTransparent}>
                         <Image style={styles.imagesProfile} source={ require('../assets/profile_user/man.jpg') } />
-                        <Text style={styles.textProfile}> Nestiawan Ferdiyanto </Text> 
+                        <Text style={styles.textProfile}> { nameSession } </Text> 
                         <Text style={styles.textProfileDom}> Bandar Lampung - Lampung </Text>
                         <TouchableOpacity style={styles.editProfile}>
                             <Text style={styles.textEditProfile}> Perbarui </Text> 
@@ -48,7 +64,7 @@ const Profile = ({ navigation }) => {
                         <Text style={styles.textInfoCard}> Riwayat Penitipan </Text> 
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.buttonLogout} onPress={() => { navigation.replace('Login') }}>
+                <TouchableOpacity style={styles.buttonLogout} onPress={() => { _logout() }}>
                     <Text style={styles.textLogout}> Keluar </Text>
                 </TouchableOpacity>
             </ScrollView>
